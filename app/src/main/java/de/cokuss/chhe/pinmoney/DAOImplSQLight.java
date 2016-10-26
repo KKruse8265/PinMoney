@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-class DAOImplSQLight extends SQLiteOpenHelper implements BuchungDAO, KontoDAO, PaymentsDAO {
+public class DAOImplSQLight extends SQLiteOpenHelper implements BuchungDAO, KontoDAO, PaymentsDAO {
     private static final String LOG_TAG = DAOImplSQLight.class.getSimpleName();
     //Datenbank
     private static final String DB_NAME = "taschengeldkonto.db";
@@ -62,7 +62,7 @@ class DAOImplSQLight extends SQLiteOpenHelper implements BuchungDAO, KontoDAO, P
         log("Helper hat die DB " + getDatabaseName() + " erzeugt");
     }
 
-    static DAOImplSQLight getInstance(Context c) {
+    public static DAOImplSQLight getInstance(Context c) {
         if (daoImplSQLight == null) {
             daoImplSQLight = new DAOImplSQLight(c);
         }
@@ -78,7 +78,7 @@ class DAOImplSQLight extends SQLiteOpenHelper implements BuchungDAO, KontoDAO, P
         String nowDate = dateHelper.setNowDate();
         String sql = INSERT_INTO_PIN
                 + " values ( null, '" + nowDate + "' ,'" + name + "', '" + gebDateStr + "', '" + startDateStr
-                + "', '" + payments.getTurnusStr() + "', " + payments.getBetrag() + ", '" + aktion + "')";
+                + "', '" + payments.getTurnusStr() + "', " + payments.getAmount() + ", '" + aktion + "')";
         db.execSQL(sql);
     }
 
@@ -168,7 +168,7 @@ class DAOImplSQLight extends SQLiteOpenHelper implements BuchungDAO, KontoDAO, P
     }
 
 
-    ArrayList<PinMoneyEntry> getEntryListFromPinMoney(Context context) {
+    public ArrayList<PinMoneyEntry> getEntryListFromPinMoney(Context context) {
         //This Class got no context, for use of resources you need it
         db = getWritableDatabase();
         String name, action, cycleStr;
@@ -224,25 +224,25 @@ class DAOImplSQLight extends SQLiteOpenHelper implements BuchungDAO, KontoDAO, P
 
     //here Konto is the right parameter
     @Override
-    public void createBuchung(Konto konto, Buchung buchung) {
+    public void createBuchung(Konto konto, Booking booking) {
         db = getWritableDatabase();
         DateHelper dateHelper = new DateHelper();
         String datum = dateHelper.setNowDate();
-        //Achtung Hier wird direkt Buchung geschrieben : Balance ist vorher korrekt zu setzen!
+        //Achtung Hier wird direkt Booking geschrieben : Balance ist vorher korrekt zu setzen!
         String sql = "Insert into " + konto.getInhaber() + " ( "
                 + COLUMN_DATE + "," + COLUMN_VALUE + "," + COLUMN_TEXT + ","
                 + COLUMN_VERI_ID + "," + COLUMN_VERI_TYPE + "," + COLUMN_BALANCE + " ) "
                 + "values ('" + datum + "', "
-                + buchung.getValue() + ",'" + buchung.getText() + "'," + buchung.getVeri_id() + ",'"
-                + buchung.getVeri_type() + "'," + buchung.getBalance() + ")";
-        log("Buchung erstellen mit: " + sql);
+                + booking.getValue() + ",'" + booking.getText() + "'," + booking.getVeri_id() + ",'"
+                + booking.getVeri_type() + "'," + booking.getBalance() + ")";
+        log("Booking erstellen mit: " + sql);
         db.execSQL(sql);
     }
 
     //It must be called from somewhere you can get a context,
     //For getting a Instance of this Class (DAOImplSQLight) you also need a context that seems ok for me
     @Override
-    public Buchung calcSavings(Context context, String owner) {
+    public Booking calcSavings(Context context, String owner) {
         Calendar historyDate, bookingDate, today, startDate;
         historyDate = Calendar.getInstance();
         bookingDate = Calendar.getInstance();
@@ -266,7 +266,7 @@ class DAOImplSQLight extends SQLiteOpenHelper implements BuchungDAO, KontoDAO, P
             return null;
         }
         //give me the last automatic booking of pinmoney
-        Buchung automaticBooking = daoImplSQLight.getLastRelevantBooking(owner);
+        Booking automaticBooking = daoImplSQLight.getLastRelevantBooking(owner);
         if (automaticBooking != null) {
             //there was a automatic booking of pinmoney before
             bookingDate.setTime(automaticBooking.getDate());
@@ -277,7 +277,7 @@ class DAOImplSQLight extends SQLiteOpenHelper implements BuchungDAO, KontoDAO, P
             startDate = historyDate;
         }
         Cycle cycle = payments.getCycle();
-        float valuePerCycle = payments.getBetrag();
+        float valuePerCycle = payments.getAmount();
         int countCycles = 0;
         float valueToBook = 0f;
         Calendar setDate = (Calendar) startDate.clone();
@@ -286,7 +286,7 @@ class DAOImplSQLight extends SQLiteOpenHelper implements BuchungDAO, KontoDAO, P
         today = setToSameTimeButDifferentDate(startDate, Calendar.getInstance());
         log("StartTime: " + startDate.getTime().toString() + " Today : " + today.getTime().toString());
         log("Vergleich startDate.compareTo(today) : " + startDate.compareTo(today));
-        Buchung result = null;
+        Booking result = null;
         if (startDate.before(today)) {
             switch (cycle) {
                 case TAEGLICH:
@@ -332,7 +332,7 @@ class DAOImplSQLight extends SQLiteOpenHelper implements BuchungDAO, KontoDAO, P
 
         if ( valueToBook > 0f) {
             String text = DONT_USE_THIS_FOR_NORMAL_BOOKING +": "+ countCycles + cycle.getBezeichnerLetter()+". a " +  valuePerCycle+ "€";
-            result = new Buchung(null, setDate.getTime(), valueToBook, text, 0l, 0, (daoImplSQLight.getKontostand(owner) + valueToBook));
+            result = new Booking(null, setDate.getTime(), valueToBook, text, 0l, 0, (daoImplSQLight.getKontostand(owner) + valueToBook));
         }
 
         return result;
@@ -363,25 +363,25 @@ class DAOImplSQLight extends SQLiteOpenHelper implements BuchungDAO, KontoDAO, P
     }
 
 
-    private Buchung getLastRelevantBooking(String owner) {
-        ArrayList<Buchung> allBuchungen = daoImplSQLight.getAllBuchungen(owner);
-        Buchung buchung = null;
+    private Booking getLastRelevantBooking(String owner) {
+        ArrayList<Booking> allBuchungen = daoImplSQLight.getAllBuchungen(owner);
+        Booking booking = null;
         //wenn Du im Buchungstext DONT_USE_THIS_FOR_NORMAL_BOOKING als Teilstring findest
-        //  weise diese Buchung buchung zu
+        //  weise diese Booking booking zu
         // mache das bis zum letzten Eintrag in allBuchungen
-        // der Inhalt von buchung ist jetzt null oder die letzte gesuchte Buchung
+        // der Inhalt von booking ist jetzt null oder die letzte gesuchte Booking
         if (allBuchungen != null && !allBuchungen.isEmpty()) {
             //hoffe es geht in der richtigen Reihenfolge
-            for (Buchung aktBuchung : allBuchungen) {
-                if (aktBuchung.getText().startsWith(DONT_USE_THIS_FOR_NORMAL_BOOKING)) {
-                    buchung = aktBuchung;
+            for (Booking aktBooking : allBuchungen) {
+                if (aktBooking.getText().startsWith(DONT_USE_THIS_FOR_NORMAL_BOOKING)) {
+                    booking = aktBooking;
                 }
             }
         }
-        return buchung;
+        return booking;
     }
 
-    Konto getKonto(String kontoname) {
+    public Konto getKonto(String kontoname) {
         Konto konto = null;
         if (kontoExists(kontoname)) {
             float kontostand = getKontostand(kontoname);
@@ -391,10 +391,10 @@ class DAOImplSQLight extends SQLiteOpenHelper implements BuchungDAO, KontoDAO, P
     }
 
     @Override
-    public ArrayList<Buchung> getAllBuchungen(String name) {
+    public ArrayList<Booking> getAllBuchungen(String name) {
         db = getWritableDatabase();
-        ArrayList<Buchung> buchungen = new ArrayList<>();
-        Buchung buchung;
+        ArrayList<Booking> buchungen = new ArrayList<>();
+        Booking booking;
         Long id;
         Date date;
         float value;
@@ -417,15 +417,15 @@ class DAOImplSQLight extends SQLiteOpenHelper implements BuchungDAO, KontoDAO, P
             balance = c.getFloat(c.getColumnIndex(COLUMN_BALANCE));
             try {
                 date = dateHelper.sdfLong.parse(c.getString(c.getColumnIndex(COLUMN_DATE)));
-                buchung = new Buchung(id, date, value, text, veri_id, veri_type, balance);
+                booking = new Booking(id, date, value, text, veri_id, veri_type, balance);
             } catch (ParseException e) {
-                //buchung = new Buchung(id, null, value, text, veri_id, veri_type, balance);
+                //booking = new Booking(id, null, value, text, veri_id, veri_type, balance);
                 Log.e(LOG_TAG, e.getMessage());
                 e.printStackTrace();
                 //todo Vielleicht falsch ? Ich denke es ist so am Sichersten
                 return null;
             }
-            buchungen.add(buchung);
+            buchungen.add(booking);
             c.moveToNext();
         }
         c.close();

@@ -23,8 +23,8 @@ Wenn die Tests nicht klappen sollte ich mich mal um folgendes Kümmern: nutze ht
 
 
 
-        Create table Leo(id INTEGER PRIMARY KEY AUTOINCREMENT, datum,betrag,text,verifikation_id,verifikation_typ,kontostand )
-        Create table Tony(id INTEGER PRIMARY KEY AUTOINCREMENT, datum,betrag,text,verifikation_id,verifikation_typ,kontostand )
+        Create table Leo(id INTEGER PRIMARY KEY AUTOINCREMENT, datum,amount,text,verifikation_id,verifikation_typ,kontostand )
+        Create table Tony(id INTEGER PRIMARY KEY AUTOINCREMENT, datum,amount,text,verifikation_id,verifikation_typ,kontostand )
 
 
 

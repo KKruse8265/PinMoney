@@ -1,7 +1,9 @@
-package de.cokuss.chhe.pinmoney;
+package de.cokuss.chhe.pinmoney.help.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import de.cokuss.chhe.pinmoney.R;
 
 public class HelpNewActivity extends AppCompatActivity {
 

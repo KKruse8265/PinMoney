@@ -7,7 +7,7 @@
                 android:background="@mipmap/background"
                 android:paddingBottom="@dimen/activity_vertical_margin"
                 android:paddingTop="0dp"
-                tools:context="de.cokuss.chhe.pinmoney.BuchenActivity">
+                tools:context="de.cokuss.chhe.pinmoney.activity.BuchenActivity">
 
     <include
         layout="@layout/toolbar_main"
@@ -78,8 +78,8 @@
         android:textSize="16sp"
         android:textStyle="bold"
         android:textColor="#000000"
-        android:labelFor="@+id/betrag"
-        android:text="@string/betrag" />
+        android:labelFor="@+id/amount"
+        android:text="@string/amount" />
 
     <EditText
         android:id="@+id/betragBuchen"

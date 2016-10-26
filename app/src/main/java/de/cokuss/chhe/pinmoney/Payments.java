@@ -2,18 +2,18 @@ package de.cokuss.chhe.pinmoney;
 
 import java.util.Date;
 
-class Payments {
+public class Payments {
     private Cycle cycle;
-    private float betrag;
+    private float amount;
     private Date date;
 
-    Payments(Date date, Cycle cycle, float betrag) {
+    public Payments(Date date, Cycle cycle, float amount) {
         this.date = date;
         this.cycle = cycle;
-        this.betrag = betrag;
+        this.amount = amount;
     }
 
-    Date getDate () {
+    public Date getDate() {
         return date;
     }
 
@@ -25,7 +25,7 @@ class Payments {
         return cycle.getBezeichner();
     }
 
-    String getTurnusStrShort () {
+    public String getTurnusStrShort() {
         return cycle.getBezeichnerLetter();
     }
 
@@ -33,12 +33,12 @@ class Payments {
         this.cycle = cycle;
     }
 
-    float getBetrag () {
-        return betrag;
+    public float getAmount() {
+        return amount;
     }
 
-    public void setBetrag (float betrag) {
-        this.betrag = betrag;
+    public void setAmount(float amount) {
+        this.amount = amount;
     }
 
 }

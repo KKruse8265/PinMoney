@@ -5,7 +5,7 @@
     <string name="action_settings">Einstellungen</string>
     <string name="action_empfaenger">Empfänger</string>
     <string name="ausahlung_von">Auszahlung von Konto:</string>
-    <string name="betrag">Betrag (€.Cent):</string>
+    <string name="amount">Betrag (€.Cent):</string>
     <string name="betrag_edit">0.00 €</string>
     <string name="bitte_empf_nger_ausw_hlen">Bitte Empfänger auswählen!</string>
     <string name="buchen">buchen</string>

@@ -1,4 +1,4 @@
-package de.cokuss.chhe.pinmoney;
+package de.cokuss.chhe.pinmoney.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,6 +18,12 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import de.cokuss.chhe.pinmoney.Booking;
+import de.cokuss.chhe.pinmoney.DAOImplSQLight;
+import de.cokuss.chhe.pinmoney.Konto;
+import de.cokuss.chhe.pinmoney.R;
+import de.cokuss.chhe.pinmoney.help.activity.HelpStartActivity;
 
 public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -88,15 +94,15 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private void alertDialogDoIt(final String konto, final Buchung buchung) {
+    private void alertDialogDoIt(final String konto, final Booking booking) {
         alertBuilder = new AlertDialog.Builder(MainActivity.this);
-        alertBuilder.setMessage("Soll ich die Buchung für das Konto " + konto + " ausführen? Keine Angst das steht hier nur zu Test zwecken!");
+        alertBuilder.setMessage("Soll ich die Booking für das Konto " + konto + " ausführen? Keine Angst das steht hier nur zu Test zwecken!");
         alertBuilder.setCancelable(true);
         alertBuilder.setPositiveButton(
                 "Ja",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        daoImplSQLight.createBuchung(daoImplSQLight.getKonto(konto), buchung);
+                        daoImplSQLight.createBuchung(daoImplSQLight.getKonto(konto), booking);
                         dialog.cancel();
                     }
                 });
@@ -244,13 +250,13 @@ public class MainActivity extends AppCompatActivity {
                 }
                 String testeMich = accountName.getSelectedItem().toString();
                 //errechne das fällige Taschengeld
-                Buchung buchung = daoImplSQLight.calcSavings(this, testeMich);
-                if (buchung != null) {
-                    log(buchung.toString());
-                    alertDialogDoIt(testeMich, buchung);
+                Booking booking = daoImplSQLight.calcSavings(this, testeMich);
+                if (booking != null) {
+                    log(booking.toString());
+                    alertDialogDoIt(testeMich, booking);
                     alertDialog = alertBuilder.create();
                     alertDialog.show();
-                } else log("Leere Buchung! ");
+                } else log("Leere Booking! ");
                 return true;
         }
         return super.onOptionsItemSelected(item);

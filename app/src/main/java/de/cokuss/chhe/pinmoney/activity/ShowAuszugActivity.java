@@ -1,4 +1,4 @@
-package de.cokuss.chhe.pinmoney;
+package de.cokuss.chhe.pinmoney.activity;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +16,12 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import de.cokuss.chhe.pinmoney.Booking;
+import de.cokuss.chhe.pinmoney.BuchungssatzAdapter;
+import de.cokuss.chhe.pinmoney.DAOImplSQLight;
+import de.cokuss.chhe.pinmoney.Konto;
+import de.cokuss.chhe.pinmoney.R;
+
 public class ShowAuszugActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = ShowAuszugActivity.class.getSimpleName();
@@ -24,7 +30,7 @@ public class ShowAuszugActivity extends AppCompatActivity {
     Spinner spinner;
     ArrayList<Konto> kontoList;
     ArrayList<String> nameList;
-    ArrayList<Buchung> buchungsListe;
+    ArrayList<Booking> buchungsListe;
     TextView aktuell;
 
     @Override

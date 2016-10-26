@@ -12,13 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-class HistoryAdapter extends ArrayAdapter<PinMoneyEntry> {
+public class HistoryAdapter extends ArrayAdapter<PinMoneyEntry> {
     private DateHelper dateHelper = new DateHelper();
 
 
     //PinMoneyEntry (Payments payments, Date entryDate, String kontoName, String action)
 
-    HistoryAdapter(Context context, ArrayList<PinMoneyEntry> pinMoneyEnrties) {
+    public HistoryAdapter(Context context, ArrayList<PinMoneyEntry> pinMoneyEnrties) {
         super(context, 0, (List<PinMoneyEntry>) pinMoneyEnrties);
     }
     //getView gets called from System to inflate a View (here ListView for history entrys)
@@ -63,7 +63,7 @@ class HistoryAdapter extends ArrayAdapter<PinMoneyEntry> {
         } else {
             tvStartDate.setText(R.string.no);
         }
-        tvBetrag.setText(String.format(Locale.getDefault(), "%.2f", payments.getBetrag()));
+        tvBetrag.setText(String.format(Locale.getDefault(), "%.2f", payments.getAmount()));
         tvCycle.setText(payments.getTurnusStrShort());
         // Return the completed view to render on screen
         return convertView;

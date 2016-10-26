@@ -1,4 +1,4 @@
-package de.cokuss.chhe.pinmoney;
+package de.cokuss.chhe.pinmoney.activity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -15,9 +15,18 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
+
+import de.cokuss.chhe.pinmoney.Booking;
+import de.cokuss.chhe.pinmoney.Check4EditText;
+import de.cokuss.chhe.pinmoney.Cycle;
+import de.cokuss.chhe.pinmoney.DAOImplSQLight;
+import de.cokuss.chhe.pinmoney.DateHelper;
+import de.cokuss.chhe.pinmoney.Konto;
+import de.cokuss.chhe.pinmoney.Payments;
+import de.cokuss.chhe.pinmoney.R;
+import de.cokuss.chhe.pinmoney.help.activity.HelpNewActivity;
 
 public class NewRecipientActivity extends AppCompatActivity {
     private static final String LOG_TAG = NewRecipientActivity.class.getSimpleName();
@@ -161,9 +170,9 @@ public class NewRecipientActivity extends AppCompatActivity {
                 Konto konto = new Konto(kontoname, startBetrag);
                 daoImplSQLight.createKonto(konto);
                 log("createnew Konto erstellt");
-                //erste Buchung mit Startbetrag
-                Buchung buchung = new Buchung(null, null, startBetrag, "Neuanlage", null, null, startBetrag);
-                daoImplSQLight.createBuchung(konto, buchung);
+                //erste Booking mit Startbetrag
+                Booking booking = new Booking(null, null, startBetrag, "Neuanlage", null, null, startBetrag);
+                daoImplSQLight.createBuchung(konto, booking);
                 //Eintrag in die History
                 daoImplSQLight.addEntryToPinMoney(kontoname, gebDatum, payments, "neu");
                 log("createnew setPinmoney erstellt");

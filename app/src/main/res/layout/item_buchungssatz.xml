@@ -42,7 +42,7 @@
         android:paddingLeft="@dimen/buchungssatz_padding"
         android:textAlignment="textEnd"
         android:background="@color/bg_color_2"
-        android:text="@string/betrag" />
+        android:text="@string/amount" />
 
     <TextView
         android:id="@+id/iBuSumme"
